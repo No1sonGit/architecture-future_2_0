@@ -1,0 +1,43 @@
+@startuml
+!define RECTANGLE #LightBlue
+
+title Архитектура
+
+actor "Бизнес-пользователь" as User
+
+rectangle "Витрина данных" as DataPortal {
+  rectangle "BI-система (Tableau, Looker, Power BI)" as BI RECTANGLE
+  rectangle "Каталог данных" as DataCatalog RECTANGLE
+  rectangle "API-шлюз" as APIGateway RECTANGLE
+}
+
+rectangle "DWH (Snowflake, BigQuery, Databricks)" as DWH RECTANGLE
+rectangle "ETL (Apache Airflow, dbt)" as ETL RECTANGLE
+rectangle "Kafka (Шина данных)" as Kafka RECTANGLE
+
+rectangle "Финтех-сервисы" as Fintech RECTANGLE {
+  rectangle "Банк и кредиты" as Bank RECTANGLE
+  rectangle "Платежные операции" as Payments RECTANGLE
+}
+
+rectangle "ИИ-сервисы" as AI RECTANGLE {
+  rectangle "Анализ медицинских данных" as MedicalAI RECTANGLE
+  rectangle "Прогнозирование лечения" as TreatmentAI RECTANGLE
+}
+
+rectangle "Клиники" as Clinics RECTANGLE {
+  rectangle "Система управления клиникой" as ClinicSystem RECTANGLE
+  rectangle "Электронные медицинские карты" as MedicalRecords RECTANGLE
+}
+
+User --> DataPortal: Запрос отчетов и аналитики
+DataPortal --> BI: Запрос аналитики
+DataPortal --> DataCatalog: Метаданные и доступ
+DataPortal --> APIGateway: Доступ к данным
+APIGateway --> DWH: Запрос агрегации данных
+DWH --> ETL: Обновление данных
+ETL --> Kafka: Потоковая обработка данных
+Kafka --> Fintech: Финансовые данные
+Kafka --> AI: Медицинские данные
+Kafka --> Clinics: Операционные данные
+@enduml
