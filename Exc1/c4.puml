@@ -11,9 +11,16 @@ rectangle "Витрина данных" as DataPortal {
   rectangle "API-шлюз" as APIGateway RECTANGLE
 }
 
-rectangle "DWH (Snowflake, BigQuery, Databricks)" as DWH RECTANGLE
-rectangle "ETL (Apache Airflow, dbt)" as ETL RECTANGLE
-rectangle "Kafka (Шина данных)" as Kafka RECTANGLE
+rectangle "Хранилище данных" as Storage RECTANGLE {
+  rectangle "DWH (Snowflake, BigQuery, Databricks)" as DWH RECTANGLE
+  rectangle "S3 / Объектное хранилище\n(неструктурированные данные)" as S3 RECTANGLE
+}
+
+rectangle "Интеграция (batch и streaming)" as Integration RECTANGLE {
+  rectangle "ETL (Apache Airflow, dbt)" as ETL RECTANGLE
+  rectangle "Kafka (Шина данных)" as Kafka RECTANGLE
+  rectangle "Apache Camel\n(интеграционная логика, маршрутизация)" as Camel RECTANGLE
+}
 
 rectangle "Финтех-сервисы" as Fintech RECTANGLE {
   rectangle "Банк и кредиты" as Bank RECTANGLE
@@ -36,8 +43,12 @@ DataPortal --> DataCatalog: Метаданные и доступ
 DataPortal --> APIGateway: Доступ к данным
 APIGateway --> DWH: Запрос агрегации данных
 DWH --> ETL: Обновление данных
-ETL --> Kafka: Потоковая обработка данных
+S3 --> ETL: Использование неструктурированных данных
 Kafka --> Fintech: Финансовые данные
 Kafka --> AI: Медицинские данные
 Kafka --> Clinics: Операционные данные
+Camel --> Kafka: Использование Kafka как транспорта
+Camel --> Fintech: Интеграция финансовых данных
+Camel --> AI: Интеграция с ИИ-сервисами
+Camel --> Clinics: Интеграция с клиниками
 @enduml
