@@ -1,0 +1,54 @@
+@startuml
+!define RECTANGLE #LightBlue
+
+title Архитектура
+
+actor "Бизнес-пользователь" as User
+
+rectangle "Витрина данных" as DataPortal {
+  rectangle "BI-система (Tableau, Looker, Power BI)" as BI RECTANGLE
+  rectangle "Каталог данных" as DataCatalog RECTANGLE
+  rectangle "API-шлюз" as APIGateway RECTANGLE
+}
+
+rectangle "Хранилище данных" as Storage RECTANGLE {
+  rectangle "DWH (Snowflake, BigQuery, Databricks)" as DWH RECTANGLE
+  rectangle "S3 / Объектное хранилище\n(неструктурированные данные)" as S3 RECTANGLE
+}
+
+rectangle "Интеграция (batch и streaming)" as Integration RECTANGLE {
+  rectangle "ETL (Apache Airflow, dbt)" as ETL RECTANGLE
+  rectangle "Kafka (Шина данных)" as Kafka RECTANGLE
+  rectangle "Apache Camel\n(интеграционная логика, маршрутизация)" as Camel RECTANGLE
+}
+
+rectangle "Финтех-сервисы" as Fintech RECTANGLE {
+  rectangle "Банк и кредиты" as Bank RECTANGLE
+  rectangle "Платежные операции" as Payments RECTANGLE
+}
+
+rectangle "ИИ-сервисы" as AI RECTANGLE {
+  rectangle "Анализ медицинских данных" as MedicalAI RECTANGLE
+  rectangle "Прогнозирование лечения" as TreatmentAI RECTANGLE
+}
+
+rectangle "Клиники" as Clinics RECTANGLE {
+  rectangle "Система управления клиникой" as ClinicSystem RECTANGLE
+  rectangle "Электронные медицинские карты" as MedicalRecords RECTANGLE
+}
+
+User --> DataPortal: Запрос отчетов и аналитики
+DataPortal --> BI: Запрос аналитики
+DataPortal --> DataCatalog: Метаданные и доступ
+DataPortal --> APIGateway: Доступ к данным
+APIGateway --> DWH: Запрос агрегации данных
+DWH --> ETL: Обновление данных
+S3 --> ETL: Использование неструктурированных данных
+Kafka --> Fintech: Финансовые данные
+Kafka --> AI: Медицинские данные
+Kafka --> Clinics: Операционные данные
+Camel --> Kafka: Использование Kafka как транспорта
+Camel --> Fintech: Интеграция финансовых данных
+Camel --> AI: Интеграция с ИИ-сервисами
+Camel --> Clinics: Интеграция с клиниками
+@enduml
